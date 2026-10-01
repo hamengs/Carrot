@@ -4,6 +4,7 @@ project(Carrot LANGUAGES CXX)
 # Keep the application and its DLL together for both Debug and Release.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+add_subdirectory(thrid_party/spdlog)
 add_subdirectory(Carrot)
 add_subdirectory(Sandbox)
 
