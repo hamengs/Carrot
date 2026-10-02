@@ -12,7 +12,6 @@ namespace Carrot
     public:
         Application(/* args */);
         virtual ~Application();
-        void Print();
         void Run();
     };
     

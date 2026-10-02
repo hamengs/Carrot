@@ -1,3 +1,6 @@
 [submodule "spdlog"]
 	path = thrid_party/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "thrid_party/glfw"]
+	path = thrid_party/glfw
+	url = https://github.com/glfw/glfw.git
