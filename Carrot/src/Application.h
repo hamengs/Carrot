@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core.h"
+#include <memory>
+#include "Window.h"
+#include "Events/ApplicationEvent.h"
 
 namespace Carrot
 {
@@ -9,10 +12,15 @@ namespace Carrot
     {
     private:
         /* data */
+        bool m_Running = true;
+        std::unique_ptr<Window> m_Window;
+
+        bool OnWindowClose(WindowCloseEvent& e);
     public:
         Application(/* args */);
         virtual ~Application();
         void Run();
+        void OnEvent(Event& e);
     };
     
 

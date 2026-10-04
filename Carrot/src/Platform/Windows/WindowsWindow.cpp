@@ -6,6 +6,8 @@
 
 #include <stdexcept>
 #include "Events/KeyEvent.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/MouseEvent.h"
 
 namespace Carrot
 {
@@ -32,6 +34,10 @@ namespace Carrot
             nullptr  // 不与另一个窗口共享 OpenGL 资源
         );
 
+        //设置成员变量的宽高
+        m_Data.Width = props.Width;
+        m_Data.Height = props.Height;
+
         //创建失败时先清理 GLFW，再抛异常，由入口 main 捕获。
         if(!m_Window){
             glfwTerminate();
@@ -46,18 +52,117 @@ namespace Carrot
         //把成员数据的地址关联到 GLFW 窗口，回调通过窗口指针找回它。
         glfwSetWindowUserPointer(m_Window, &m_Data);
         //这里只注册回调；GLFW 处理到键盘消息时才会执行 lambda。
-        glfwSetKeyCallback(m_Window,
-            [](GLFWwindow* window, int key, int, int action, int)
-            {
-                auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-                if (action == GLFW_PRESS && data && data->EventCallback)
-                {
-                    KeyPressedEvent event(key, 0);
-                    //同步调用应用保存的 PrintEvent，引用只在本次调用期间有效。
-                    data->EventCallback(event);
-                }
-            });
+        glfwSetKeyCallback(m_Window,&KeyCallbackFn);
+        glfwSetMouseButtonCallback(m_Window,&MouseButtonCallbackFn);
+        glfwSetScrollCallback(m_Window,&MouseScrollCallbackFn);
+        glfwSetCursorPosCallback(m_Window,&CursorPosCallbackFn);
+        glfwSetWindowSizeCallback(m_Window,&WindowResizeCallbackFn);
+        glfwSetWindowCloseCallback(m_Window,&WindowCloseCallbackFn);
+        
+            
 
+    }
+
+    void WindowsWindow::MouseScrollCallbackFn(GLFWwindow* window, double XOffset, double YOffset){
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if(data&&data->EventCallback){
+            MouseScrolledEvent event((float)XOffset,(float)YOffset);
+            data->EventCallback(event);
+        }
+    }
+
+    void WindowsWindow::WindowCloseCallbackFn(GLFWwindow* window){
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if(data&&data->EventCallback){
+            WindowCloseEvent event;
+            data->EventCallback(event);
+        }
+    }
+
+    void WindowsWindow::CursorPosCallbackFn(GLFWwindow* window, double xPos, double yPos){
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if(data&&data->EventCallback){
+            MouseMovedEvent event((float)xPos,(float)yPos);
+            data->EventCallback(event);
+        }
+    }
+
+    void WindowsWindow::MouseButtonCallbackFn(GLFWwindow* window, int button, int action, int mods){
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if(data&&data->EventCallback){
+            switch (action)
+            {
+                case GLFW_PRESS:
+                {
+                    MouseButtonPressedEvent event(button);
+                    data->EventCallback(event);
+                    break;
+                }
+
+                case GLFW_RELEASE:
+                {
+                    MouseButtonReleasedEvent event(button);
+                    data->EventCallback(event);
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    //glfw窗口收到键盘事件后调用这个函数,action代表事件(按下,放开,按住之类的),key代表键盘代码
+    void WindowsWindow::KeyCallbackFn(GLFWwindow* window, int key, int scancode, int action, int mods){
+        //glfwGetWindowUserPointer通过glfw window指针得到我们之前绑定的一个自定义结构体,由于绑定只是地址,所以还得转回我们的结构体指针类型
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        //然后我们就可以在这里调用我们之前已经保存好的真正的回调函数
+        if(data&&data->EventCallback){
+            switch(action){
+                case GLFW_PRESS:
+                {
+                    KeyPressedEvent pressedEvent(key,0);
+                    data->EventCallback(pressedEvent);
+                    break;
+                }
+
+                case GLFW_RELEASE:
+                {
+                    KeyReleasedEvent releasedEvent(key);
+                    data->EventCallback(releasedEvent);
+                    break;
+                }
+
+                case GLFW_REPEAT:
+                {
+                    KeyPressedEvent repeatEvent(key,1);
+                    data->EventCallback(repeatEvent);
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+                
+            }
+        }
+    }
+
+    void WindowsWindow::WindowResizeCallbackFn(GLFWwindow* window, int width, int height){
+        WindowsWindow::WindowData* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if (!data)
+            return;
+
+        data->Width = width;
+        data->Height = height;
+        if(data->EventCallback){
+            WindowResizeEvent event(width,height);
+            data->EventCallback(event);
+  
+        }
     }
 
     void WindowsWindow::ShutDown(){
@@ -72,6 +177,7 @@ namespace Carrot
         glfwPollEvents();
         //交换这个窗口的显示缓冲，呈现绘制结果；不会自动绘制或清屏。
         glfwSwapBuffers(m_Window);
+        
     }
 
     unsigned int WindowsWindow::GetWidth() const{

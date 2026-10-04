@@ -30,3 +30,6 @@ target_compile_definitions(Carrot PRIVATE CARROT_BUILD_DLL)
 target_link_libraries(Carrot PUBLIC spdlog::spdlog)
 
 target_link_libraries(Carrot PRIVATE glfw)
+
+find_package(OpenGL REQUIRED)
+target_link_libraries(Carrot PRIVATE OpenGL::GL)
