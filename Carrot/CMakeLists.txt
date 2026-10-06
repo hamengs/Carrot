@@ -5,6 +5,10 @@ add_library(Carrot SHARED
     src/Log.h
     src/Window.h
     src/Window.cpp
+    src/Layer.h
+    src/Layer.cpp
+    src/LayerStack.h
+    src/LayerStack.cpp
 
     src/Events/Events.cpp
     src/Events/Event.h
@@ -29,7 +33,7 @@ target_include_directories(Carrot PUBLIC
 target_compile_definitions(Carrot PRIVATE CARROT_BUILD_DLL)
 target_link_libraries(Carrot PUBLIC spdlog::spdlog)
 
-target_link_libraries(Carrot PRIVATE glfw)
+target_link_libraries(Carrot PRIVATE glfw glad)
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(Carrot PRIVATE OpenGL::GL)

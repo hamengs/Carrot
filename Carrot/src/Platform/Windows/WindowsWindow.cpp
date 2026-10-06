@@ -1,6 +1,8 @@
 #include "WindowsWindow.h"
 #include "Log.h"
 
+
+#include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
@@ -23,7 +25,11 @@ namespace Carrot
         if(!glfwInit()){
             throw std::runtime_error("Failed to initialize GLFW");
         }
-
+        //告诉 GLFW：接下来创建窗口时，请给我一个 OpenGL 4.6 的 Core 上下文。
+        //可以缺失,但是会给一个默认版本,如果写出来的话,不支持的情况下可以提前报错
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         CT_CORE_INFO("Creating window '{0}'({1} x {2})",props.Title,props.Width, props.Height);
         m_Window = glfwCreateWindow(
@@ -46,12 +52,23 @@ namespace Carrot
 
         //设置opengl的上下文来自哪个窗口
         glfwMakeContextCurrent(m_Window);
+
+        //初始化GLAD
+        if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+            glfwDestroyWindow(m_Window);
+            m_Window = nullptr;
+            glfwTerminate();
+            throw std::runtime_error("Failed to initialize GLAD");
+        }
+
+        CT_CORE_INFO("OpenGL: {0}",reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+
         //垂直同步,0关闭1开启
         SetVSync(false);
 
         //把成员数据的地址关联到 GLFW 窗口，回调通过窗口指针找回它。
         glfwSetWindowUserPointer(m_Window, &m_Data);
-        //这里只注册回调；GLFW 处理到键盘消息时才会执行 lambda。
+        //注册各个回调函数,glfw和我们自己的回调函数
         glfwSetKeyCallback(m_Window,&KeyCallbackFn);
         glfwSetMouseButtonCallback(m_Window,&MouseButtonCallbackFn);
         glfwSetScrollCallback(m_Window,&MouseScrollCallbackFn);
@@ -59,8 +76,6 @@ namespace Carrot
         glfwSetWindowSizeCallback(m_Window,&WindowResizeCallbackFn);
         glfwSetWindowCloseCallback(m_Window,&WindowCloseCallbackFn);
         
-            
-
     }
 
     void WindowsWindow::MouseScrollCallbackFn(GLFWwindow* window, double XOffset, double YOffset){

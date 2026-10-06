@@ -14,6 +14,9 @@ namespace Carrot
         while(m_Running){
             glClearColor(0,1,0,1);
             glClear(GL_COLOR_BUFFER_BIT);
+            for(auto layer : m_Layers){
+                layer->OnUpdate();
+            }
             m_Window->OnUpdate();
         }
     }
@@ -35,11 +38,34 @@ namespace Carrot
     void Application::OnEvent(Event& event){
         CT_CORE_INFO("Received event: {}", event.ToString());
         EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose,this, std::placeholders::_1));
+
+        dispatcher.Dispatch<WindowCloseEvent>
+        (std::bind(&Application::OnWindowClose,this, std::placeholders::_1));
+
+        for(auto it = m_Layers.end(); it!=m_Layers.begin();){
+            //先检查是否解决再去--,和调用OnEvent,否则已完成的事件依然会调用一次OnEvent
+            if(event.Handled()){
+                break;
+            }
+            --it;
+            (*it)->OnEvent(event);
+        }
+
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e){
         m_Running = false;
         return true;
+    }
+
+    void Application::PushLayer(Layer* layer){
+        m_Layers.PushLayer(layer);
+        layer->OnAttach();
+    }
+
+    void Application::PushOverLayer(Layer* layer){
+        //加入时记得调用OnAttach初始化
+        m_Layers.PushOverLayer(layer);
+        layer->OnAttach();
     }
 } // namespace Carrot

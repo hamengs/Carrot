@@ -4,6 +4,7 @@
 #include "src/Core.h"
 #include "src/Log.h"
 #include "src/EntryPoint.h"
+#include "src/Layer.h"
 
 #include "src/Events/KeyEvent.h"
 #include "src/Events/MouseEvent.h"

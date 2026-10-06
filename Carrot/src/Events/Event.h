@@ -42,6 +42,7 @@ namespace Carrot
         virtual const char* GetName() const = 0;
         virtual int GetCategoryFlags() const = 0;
         virtual std::string ToString() const {return GetName(); }
+        inline virtual bool Handled() const {return m_Handled;}
 
         inline bool IsInCategory(EventCategory category) const{
             return GetCategoryFlags() & category; //通过与比较来判断位是否是对应事件类

@@ -4,6 +4,7 @@
 #include <memory>
 #include "Window.h"
 #include "Events/ApplicationEvent.h"
+#include "LayerStack.h"
 
 namespace Carrot
 {
@@ -14,6 +15,8 @@ namespace Carrot
         /* data */
         bool m_Running = true;
         std::unique_ptr<Window> m_Window;
+        LayerStack m_Layers;
+
 
         bool OnWindowClose(WindowCloseEvent& e);
     public:
@@ -21,6 +24,8 @@ namespace Carrot
         virtual ~Application();
         void Run();
         void OnEvent(Event& e);
+        void PushLayer(Layer* layer);
+        void PushOverLayer(Layer* layer);
     };
     
 
