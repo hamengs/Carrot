@@ -49,18 +49,20 @@ namespace Carrot
     public:
 
         inline int GetMouseButton() const {return m_Button;}
+        int GetModifiers() const { return m_Modifiers; }
 
         EVENT_CLASS_CATEGORY(EventCategoryInput|EventCategoryMouse)
     protected:
-        MouseButtonEvent(int button)
-            : m_Button(button){}
+        MouseButtonEvent(int button, int modifiers = 0)
+            : m_Button(button), m_Modifiers(modifiers){}
         int m_Button; //鼠标的按键
+        int m_Modifiers;
     };
 
     class CARROT_API MouseButtonPressedEvent : public MouseButtonEvent{
     public:
-        MouseButtonPressedEvent(int button)
-            :MouseButtonEvent(button){}
+        MouseButtonPressedEvent(int button, int modifiers = 0)
+            :MouseButtonEvent(button, modifiers){}
 
         std::string ToString() const override{
             std::stringstream ss;
@@ -72,8 +74,8 @@ namespace Carrot
 
     class CARROT_API MouseButtonReleasedEvent : public MouseButtonEvent{
     public:
-        MouseButtonReleasedEvent(int button)
-            :MouseButtonEvent(button){}
+        MouseButtonReleasedEvent(int button, int modifiers = 0)
+            :MouseButtonEvent(button, modifiers){}
 
         std::string ToString() const override{
             std::stringstream ss;
@@ -83,4 +85,13 @@ namespace Carrot
         EVENT_CLASS_TYPE(MouseButtonReleased)
     };
 
+    class CARROT_API MouseEnteredEvent : public Event {
+    public:
+        explicit MouseEnteredEvent(bool entered) : m_Entered(entered) {}
+        bool HasEntered() const { return m_Entered; }
+        EVENT_CLASS_TYPE(MouseEntered)
+        EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
+    private:
+        bool m_Entered;
+    };
 } // namespace Carrot

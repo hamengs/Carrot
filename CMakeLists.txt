@@ -14,6 +14,23 @@ target_include_directories(glad PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/thrid_party/glad/include"
 )
 
+add_library(imgui STATIC
+    thrid_party/imgui/imgui.cpp
+    thrid_party/imgui/imgui_draw.cpp
+    thrid_party/imgui/imgui_tables.cpp
+    thrid_party/imgui/imgui_widgets.cpp
+    thrid_party/imgui/imgui_demo.cpp
+    thrid_party/imgui/backends/imgui_impl_glfw.cpp
+    thrid_party/imgui/backends/imgui_impl_opengl3.cpp
+)
+
+target_include_directories(imgui PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/thrid_party/imgui"
+    "${CMAKE_CURRENT_SOURCE_DIR}/thrid_party/imgui/backends"
+)
+
+target_link_libraries(imgui PRIVATE glfw)
+
 add_subdirectory(thrid_party/glfw)
 add_subdirectory(thrid_party/spdlog)
 add_subdirectory(Carrot)

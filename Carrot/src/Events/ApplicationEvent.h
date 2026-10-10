@@ -5,6 +5,18 @@
 
 namespace Carrot
 {
+    class CARROT_API WindowFocusEvent : public Event {
+    public:
+        EVENT_CLASS_TYPE(WindowFocus)
+        EVENT_CLASS_CATEGORY(EventCategoryApplication)
+    };
+
+    class CARROT_API WindowLostFocusEvent : public Event {
+    public:
+        EVENT_CLASS_TYPE(WindowLostFocus)
+        EVENT_CLASS_CATEGORY(EventCategoryApplication)
+    };
+
     class CARROT_API WindowResizeEvent : public Event{
     public:
         WindowResizeEvent(unsigned int width, unsigned int height)

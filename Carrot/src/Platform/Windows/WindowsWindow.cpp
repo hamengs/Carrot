@@ -70,6 +70,9 @@ namespace Carrot
         glfwSetWindowUserPointer(m_Window, &m_Data);
         //注册各个回调函数,glfw和我们自己的回调函数
         glfwSetKeyCallback(m_Window,&KeyCallbackFn);
+        glfwSetCharCallback(m_Window, &CharCallbackFn);
+        glfwSetWindowFocusCallback(m_Window, &WindowFocusCallbackFn);
+        glfwSetCursorEnterCallback(m_Window, &CursorEnterCallbackFn);
         glfwSetMouseButtonCallback(m_Window,&MouseButtonCallbackFn);
         glfwSetScrollCallback(m_Window,&MouseScrollCallbackFn);
         glfwSetCursorPosCallback(m_Window,&CursorPosCallbackFn);
@@ -109,14 +112,14 @@ namespace Carrot
             {
                 case GLFW_PRESS:
                 {
-                    MouseButtonPressedEvent event(button);
+                    MouseButtonPressedEvent event(button, mods);
                     data->EventCallback(event);
                     break;
                 }
 
                 case GLFW_RELEASE:
                 {
-                    MouseButtonReleasedEvent event(button);
+                    MouseButtonReleasedEvent event(button, mods);
                     data->EventCallback(event);
                     break;
                 }
@@ -138,21 +141,21 @@ namespace Carrot
             switch(action){
                 case GLFW_PRESS:
                 {
-                    KeyPressedEvent pressedEvent(key,0);
+                    KeyPressedEvent pressedEvent(key,0,scancode,mods);
                     data->EventCallback(pressedEvent);
                     break;
                 }
 
                 case GLFW_RELEASE:
                 {
-                    KeyReleasedEvent releasedEvent(key);
+                    KeyReleasedEvent releasedEvent(key,scancode,mods);
                     data->EventCallback(releasedEvent);
                     break;
                 }
 
                 case GLFW_REPEAT:
                 {
-                    KeyPressedEvent repeatEvent(key,1);
+                    KeyPressedEvent repeatEvent(key,1,scancode,mods);
                     data->EventCallback(repeatEvent);
                     break;
                 }
@@ -163,6 +166,35 @@ namespace Carrot
                 }
                 
             }
+        }
+    }
+
+    void WindowsWindow::CharCallbackFn(GLFWwindow* window, unsigned int codepoint){
+        auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if (data && data->EventCallback) {
+            KeyTypedEvent event(codepoint);
+            data->EventCallback(event);
+        }
+    }
+
+    void WindowsWindow::WindowFocusCallbackFn(GLFWwindow* window, int focused){
+        auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if (data && data->EventCallback) {
+            if (focused) {
+                WindowFocusEvent event;
+                data->EventCallback(event);
+            } else {
+                WindowLostFocusEvent event;
+                data->EventCallback(event);
+            }
+        }
+    }
+
+    void WindowsWindow::CursorEnterCallbackFn(GLFWwindow* window, int entered){
+        auto* data = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        if (data && data->EventCallback) {
+            MouseEnteredEvent event(entered != 0);
+            data->EventCallback(event);
         }
     }
 
@@ -187,9 +219,12 @@ namespace Carrot
         glfwTerminate();
     }
 
-    void WindowsWindow::OnUpdate(){
+    void WindowsWindow::PollEvents(){
         //处理已到达的窗口消息，更新状态并调用已注册的回调。
         glfwPollEvents();
+    }
+
+    void WindowsWindow::SwapBuffers(){
         //交换这个窗口的显示缓冲，呈现绘制结果；不会自动绘制或清屏。
         glfwSwapBuffers(m_Window);
         
@@ -219,6 +254,10 @@ namespace Carrot
     bool WindowsWindow::ShouldClose() const{
         //查询关闭请求标志，不负责处理消息或销毁窗口；应用据此结束循环。
         return glfwWindowShouldClose(m_Window) == GLFW_TRUE;
+    }
+
+    void* WindowsWindow::GetNativeWindow() const{
+        return m_Window;
     }
 
     bool WindowsWindow::IsVSync() const{

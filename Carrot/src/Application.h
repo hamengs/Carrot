@@ -26,6 +26,7 @@ namespace Carrot
         void OnEvent(Event& e);
         void PushLayer(Layer* layer);
         void PushOverLayer(Layer* layer);
+        Window& GetWindow() { return *m_Window; }
     };
     
 

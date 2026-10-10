@@ -10,8 +10,8 @@ namespace Carrot
         None = 0,
         WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
         AppTick, AppUpdate, AppRender,
-        KeyPressed, KeyReleased,
-        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+        KeyPressed, KeyReleased, KeyTyped,
+        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled, MouseEntered
     };
 
     //用BIT位去分类,0001 0010这种,两个都是可以用|比如0010|0001 = 0011,判断时用&

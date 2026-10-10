@@ -4,3 +4,6 @@
 [submodule "thrid_party/glfw"]
 	path = thrid_party/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "thrid_party/imgui"]
+	path = thrid_party/imgui
+	url = https://github.com/ocornut/imgui.git

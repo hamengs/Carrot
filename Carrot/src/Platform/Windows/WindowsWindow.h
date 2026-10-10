@@ -11,7 +11,8 @@ namespace Carrot{
         explicit WindowsWindow(const WindowProps& props);
         ~WindowsWindow() override;
 
-        void OnUpdate() override;
+        void PollEvents() override;
+        void SwapBuffers() override;
 
         unsigned int GetWidth() const override;
         unsigned int GetHeight() const override;
@@ -20,11 +21,16 @@ namespace Carrot{
         bool ShouldClose() const override;
         void SetEventCallback(const EventCallbackFn& callback) override;
         static void KeyCallbackFn(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void CharCallbackFn(GLFWwindow* window, unsigned int codepoint);
+        static void WindowFocusCallbackFn(GLFWwindow* window, int focused);
+        static void CursorEnterCallbackFn(GLFWwindow* window, int entered);
         static void WindowResizeCallbackFn(GLFWwindow* window,int width, int height);
         static void WindowCloseCallbackFn(GLFWwindow* window);
         static void CursorPosCallbackFn(GLFWwindow* window, double xPos, double yPos);
         static void MouseButtonCallbackFn(GLFWwindow* window, int button, int action, int mods);
         static void MouseScrollCallbackFn(GLFWwindow* window, double XOffset, double YOffset);
+
+        void* GetNativeWindow() const override;
 
         bool IsVSync() const; //
         void SetVSync(bool enabled);

@@ -9,6 +9,9 @@ add_library(Carrot SHARED
     src/Layer.cpp
     src/LayerStack.h
     src/LayerStack.cpp
+    src/Input.h
+    src/KeyCode.h
+    src/Input.cpp
 
     src/Events/Events.cpp
     src/Events/Event.h
@@ -19,6 +22,8 @@ add_library(Carrot SHARED
 
     src/Platform/Windows/WindowsWindow.h
     src/Platform/Windows/WindowsWindow.cpp
+    src/Platform/Windows/WindowsInput.h
+    src/Platform/Windows/WindowsInput.cpp
 )
 
 target_precompile_headers(Carrot PRIVATE
@@ -28,8 +33,16 @@ target_precompile_headers(Carrot PRIVATE
 target_compile_features(Carrot PUBLIC cxx_std_17)
 target_include_directories(Carrot PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src" 
 )
+
+target_sources(Carrot PRIVATE
+    src/ImGui/ImGuiLayer.cpp
+    src/ImGui/ImGuiLayer.h
+)
+
+target_link_libraries(Carrot PRIVATE imgui)
+
 target_compile_definitions(Carrot PRIVATE CARROT_BUILD_DLL)
 target_link_libraries(Carrot PUBLIC spdlog::spdlog)
 
