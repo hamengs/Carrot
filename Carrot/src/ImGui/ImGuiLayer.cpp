@@ -11,16 +11,55 @@
 
 namespace Carrot
 {
+    void ImGuiLayer::Begin(){
+        ImGui_ImplOpenGL3_NewFrame(); // 准备渲染后端 OpenGL 后端准备
+        ImGui_ImplGlfw_NewFrame(); // 更新窗口和输入相关信息
+        ImGui::NewFrame();  // 正式开始构建这一帧的 UI
+    }
+
+    void ImGuiLayer::OnImGuiRender(){
+        //这一层自己的界面内容
+        if (m_ShowDemo)
+        ImGui::ShowDemoWindow(&m_ShowDemo);
+
+    }
+
+    //主窗口是Carrot创建的glfw窗口并且OnAttach调用的时候已经通过ImGui_ImplGlfw_InitForOpenGL(window, false);
+    //指定了主窗口. 所以gui面板都被主窗口所承载然后才能绘制. 如果拖出去的话imgui会自动创建一个glfw窗口来承载拖出去的gui,
+    //这就导致了会改变opengl上下文. imgui需要一个glfw窗口来承载才能绘制
+    void ImGuiLayer::End(){
+        ImGui::Render();//整理所有窗口绘制数据
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//把整理的数据发送给opengl执行绘制(主窗口)
+
+        ImGuiIO& io = ImGui::GetIO();
+        if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
+            //下方update和render会改变opengl的上下文,所以先通过getcurrentcontext获取当前窗口(主窗口)的备份
+            GLFWwindow* backup = glfwGetCurrentContext();
+
+            // 创建、更新或销毁额外的系统窗口
+            ImGui::UpdatePlatformWindows();
+            // 绘制额外窗口的 GUI，并交换它们的缓冲区；期间会切换上下文
+            ImGui::RenderPlatformWindowsDefault();
+
+            // 恢复调用前的当前上下文，在目前的流程里就是主窗口的上下文
+            glfwMakeContextCurrent(backup);
+        }
+    }
+
     void ImGuiLayer::OnAttach(){
         IMGUI_CHECKVERSION(); // 版本检查
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
         (void)io;
+        //启用哪些功能
         io.ConfigFlags |=
             ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
         io.ConfigFlags |=
             ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-
+        io.ConfigFlags |= 
+            ImGuiConfigFlags_DockingEnable;   // 面板停靠
+        io.ConfigFlags |= 
+            ImGuiConfigFlags_ViewportsEnable; // 拖出主窗口   
         ImGui::StyleColorsDark(); //设置样式
 
         //把我们的包装Window对象通过调用getNative取出底层glfwWindow,由于是void*还需要转换成需要的glfwWindow*
@@ -99,16 +138,4 @@ namespace Carrot
         });
     }
 
-    void ImGuiLayer::OnUpdate(){
-
-        ImGui_ImplOpenGL3_NewFrame(); // 准备渲染后端 OpenGL 后端准备
-        ImGui_ImplGlfw_NewFrame(); // 更新窗口和输入相关信息
-        ImGui::NewFrame();  // 正式开始构建这一帧的 UI
-
-        if (m_ShowDemo)
-        ImGui::ShowDemoWindow(&m_ShowDemo);
-
-        ImGui::Render();//整理绘制数据
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//把整理的数据发送给opengl执行绘制
-    }
 }

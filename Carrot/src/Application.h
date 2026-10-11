@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Events/ApplicationEvent.h"
 #include "LayerStack.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace Carrot
 {
@@ -15,6 +16,7 @@ namespace Carrot
         /* data */
         bool m_Running = true;
         std::unique_ptr<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer = nullptr;
         LayerStack m_Layers;
 
 

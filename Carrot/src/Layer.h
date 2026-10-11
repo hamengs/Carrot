@@ -12,9 +12,11 @@
         virtual ~Layer();
 
         virtual void OnUpdate(){}
-        virtual void OnEvent(Event& e){};
+        virtual void OnEvent(Event& e){}
         virtual void OnAttach(){}
         virtual void OnDetach(){}
+        //每个层有自己的imguilayer,意味着每个层有自己的界面设计维护而不用放到Imguilayer层统一管理
+        virtual void OnImGuiRender(){}
 
         //可有可无,不会对性能造成很大影响
         inline const std::string& GetName() const {return m_DebugName;}

@@ -11,11 +11,13 @@ namespace Carrot
         ImGuiLayer(Window* window): m_Window(window){}
         
 
-        void OnAttach() override;
-        void OnDetach() override;
-        void OnEvent(Event& e) override;
-        void OnUpdate() override;
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        virtual void OnEvent(Event& e) override;
+        virtual void OnImGuiRender() override;
 
+        void Begin();
+        void End();
     private:
         Window* m_Window;
         bool    m_ShowDemo = true;

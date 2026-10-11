@@ -1,6 +1,5 @@
 #include "Carrot.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
 
 //测试层
 class FooLayer : public Carrot::Layer{
@@ -15,6 +14,11 @@ class FooLayer : public Carrot::Layer{
             }
         }
     }
+    void OnImGuiRender() override{
+        ImGui::Begin("Title");
+        ImGui::Text("Hello World");
+        ImGui::End();
+    }
 };
 
 class SandBox : public Carrot::Application
@@ -24,7 +28,7 @@ private:
 public:
     SandBox(){
         //测试代码
-        //PushLayer(new FooLayer()); 
+        PushLayer(new FooLayer()); 
     };
     ~SandBox() = default;
 };
