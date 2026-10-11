@@ -34,6 +34,7 @@ target_compile_features(Carrot PUBLIC cxx_std_17)
 target_include_directories(Carrot PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/src" 
+    "${PROJECT_SOURCE_DIR}/thrid_party/glm"
 )
 
 target_sources(Carrot PRIVATE

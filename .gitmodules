@@ -7,3 +7,6 @@
 [submodule "thrid_party/imgui"]
 	path = thrid_party/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "thrid_party/glm"]
+	path = thrid_party/glm
+	url = https://github.com/g-truc/glm.git
