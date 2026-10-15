@@ -11,8 +11,30 @@
 #include "Events/ApplicationEvent.h"
 #include "Events/MouseEvent.h"
 
+#include "Renderer/Shader.h"
+
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
+
 namespace Carrot
 {
+
+    static std::string ReadFile(const std::string& path)
+    {
+        std::ifstream file(path);
+
+        if (!file.is_open())
+            throw std::runtime_error("Cannot open shader file: " + path);
+
+        std::ostringstream contents;
+        contents << file.rdbuf();
+
+        return contents.str();
+    }
+
     WindowsWindow::WindowsWindow(const WindowProps& props){
         Init(props);
     }
@@ -50,9 +72,10 @@ namespace Carrot
             throw std::runtime_error("Failed to create GLFW window");
         }
 
+        //初始化渲染上下文
+        m_Context = std::make_unique<OpenGLRenderContext>(m_Window);
         //设置opengl的上下文来自哪个窗口
-        glfwMakeContextCurrent(m_Window);
-
+        m_Context->Init();
         //初始化GLAD
         if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
             glfwDestroyWindow(m_Window);
@@ -78,6 +101,37 @@ namespace Carrot
         glfwSetCursorPosCallback(m_Window,&CursorPosCallbackFn);
         glfwSetWindowSizeCallback(m_Window,&WindowResizeCallbackFn);
         glfwSetWindowCloseCallback(m_Window,&WindowCloseCallbackFn);
+
+        //三角形测试代码
+        float vertices[3][3] = {
+            {-0.5,-0.5,0.0},
+            {0.5,-0.5,0.0},
+            {0.0,0.5,0.0}
+        };
+
+        unsigned int indices[3] = {0,1,2}; 
+        glCreateVertexArrays(1,&m_VAO);
+        glBindVertexArray(m_VAO);
+
+        //让工厂决定创建的对象,Create已经new了对象了,这里不能用make unique,使用reset把new出来的对象转移给智能指针管理
+        m_VBO.reset(
+            VertexBuffer::Create(vertices[0], sizeof(vertices))
+        );
+        m_VBO->Bind();
+
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),nullptr);
+        glEnableVertexArrayAttrib(m_VAO,0);
+
+       m_EBO.reset(
+            IndexBuffer::Create(indices,sizeof(indices))
+       );
+       m_EBO->Bind();
+
+        const std::string vertexShader = ReadFile("Carrot/src/Shaders/vertexShader.vs");
+        const std::string fragShader = ReadFile("Carrot/src/Shaders/fragShader.fs");
+        Shader mShader(vertexShader,fragShader);
+        mShader.Bind();
+        
         
     }
 
@@ -226,7 +280,7 @@ namespace Carrot
 
     void WindowsWindow::SwapBuffers(){
         //交换这个窗口的显示缓冲，呈现绘制结果；不会自动绘制或清屏。
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffer();
         
     }
 

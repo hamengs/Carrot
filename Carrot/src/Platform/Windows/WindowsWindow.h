@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Window.h"
+#include "Platform/OpenGL/OpenGLRenderContext.h"
+#include "Renderer/Buffer.h"
 
 struct GLFWwindow;
 
@@ -37,6 +39,13 @@ namespace Carrot{
 
     private:
         GLFWwindow* m_Window = nullptr;
+        std::unique_ptr<RenderContext> m_Context;
+        
+        uint32_t m_VAO;
+        std::unique_ptr<VertexBuffer> m_VBO;
+        std::unique_ptr<IndexBuffer> m_EBO;
+
+
         void ShutDown(); //关闭窗口函数,在析构时调用
         void Init(const WindowProps& props); //初始化函数,在构造时调用,需要一个props来指定初始化参数
 

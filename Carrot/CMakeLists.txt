@@ -1,4 +1,4 @@
-add_library(Carrot SHARED
+add_library(Carrot STATIC
     src/Application.cpp
     src/Application.h
     src/Log.cpp
@@ -24,6 +24,16 @@ add_library(Carrot SHARED
     src/Platform/Windows/WindowsWindow.cpp
     src/Platform/Windows/WindowsInput.h
     src/Platform/Windows/WindowsInput.cpp
+    
+    src/Platform/OpenGL/OpenGLRenderContext.cpp
+    src/Platform/OpenGL/OpenGLBuffer.cpp
+
+    src/Renderer/Shader.cpp
+    src/Renderer/Shader.h
+    src/Renderer/Buffer.cpp
+    src/Renderer/Buffer.h
+    src/Renderer/Renderer.h
+    src/Renderer/Renderer.cpp
 )
 
 target_precompile_headers(Carrot PRIVATE
@@ -42,12 +52,15 @@ target_sources(Carrot PRIVATE
     src/ImGui/ImGuiLayer.h
 )
 
-target_link_libraries(Carrot PRIVATE imgui)
+target_link_libraries(Carrot PUBLIC imgui)
 
-target_compile_definitions(Carrot PRIVATE CARROT_BUILD_DLL)
 target_link_libraries(Carrot PUBLIC spdlog::spdlog)
 
 target_link_libraries(Carrot PRIVATE glfw glad)
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(Carrot PRIVATE OpenGL::GL)
+
+if(MSVC)
+    target_compile_options(Carrot PRIVATE /W4)
+endif()

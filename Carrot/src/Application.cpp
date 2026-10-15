@@ -42,7 +42,7 @@ namespace Carrot
             m_Window->PollEvents();
             if (!m_Running)
                 break;
-            glClearColor(0,1,0,1);
+            glClearColor(0.1f,0.1f,0.1f,1);
             glClear(GL_COLOR_BUFFER_BIT);
             for(auto layer : m_Layers){
                 layer->OnUpdate();
@@ -53,6 +53,9 @@ namespace Carrot
                 layer->OnImGuiRender();
             }
             m_ImGuiLayer->End();
+            glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT,nullptr);
+            
+            //交换缓冲
             m_Window->SwapBuffers();
         }
     }
@@ -60,7 +63,7 @@ namespace Carrot
     void Application::OnEvent(Event& event){
         // 原始输入先记录，不能因为某个 Layer 消费事件而漏掉松开。
         Input::OnEvent(event);
-        CT_CORE_INFO("Received event: {}", event.ToString());
+        //CT_CORE_INFO("Received event: {}", event.ToString());
         EventDispatcher dispatcher(event);
 
         dispatcher.Dispatch<WindowCloseEvent>
@@ -77,7 +80,7 @@ namespace Carrot
 
     }
 
-    bool Application::OnWindowClose(WindowCloseEvent& e){
+    bool Application::OnWindowClose(WindowCloseEvent&){
         m_Running = false;
         return true;
     }

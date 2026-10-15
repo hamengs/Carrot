@@ -12,7 +12,7 @@
         virtual ~Layer();
 
         virtual void OnUpdate(){}
-        virtual void OnEvent(Event& e){}
+        virtual void OnEvent(Event&){}
         virtual void OnAttach(){}
         virtual void OnDetach(){}
         //每个层有自己的imguilayer,意味着每个层有自己的界面设计维护而不用放到Imguilayer层统一管理

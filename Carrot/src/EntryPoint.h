@@ -9,7 +9,7 @@
 
 Carrot::Application* CreateApplication();
 
-int main(int argc, char** argv)
+int main()
 {
     Carrot::Log::Init();
 
