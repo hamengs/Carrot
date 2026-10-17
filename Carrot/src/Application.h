@@ -6,6 +6,10 @@
 #include "Events/ApplicationEvent.h"
 #include "LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Platform/OpenGL/OpenGLRenderContext.h"
 
 namespace Carrot
 {
@@ -19,8 +23,10 @@ namespace Carrot
         ImGuiLayer* m_ImGuiLayer = nullptr;
         LayerStack m_Layers;
 
-
         bool OnWindowClose(WindowCloseEvent& e);
+
+        std::shared_ptr<VertexArray> m_VAO;
+        std::shared_ptr<Shader> m_Shader;
     public:
         Application(/* args */);
         virtual ~Application();

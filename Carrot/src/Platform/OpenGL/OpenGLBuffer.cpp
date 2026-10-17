@@ -4,7 +4,8 @@
 //这里就是真正调用底层api的地方
 namespace Carrot
 {   
-    
+
+    //----------------------VBO----------------------------
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size): m_Size(size){
         glCreateBuffers(1,&m_VertexID);
         glBindBuffer(GL_ARRAY_BUFFER,m_VertexID);
@@ -21,6 +22,10 @@ namespace Carrot
 
    void OpenGLVertexBuffer::UnBind(){
         glBindBuffer(GL_ARRAY_BUFFER,0);
+    }
+
+    void OpenGLVertexBuffer::SetLayout(const BufferLayout& layout){
+            m_Layout = layout;
     }
 
     //----------------------IndexBuffer-------------------------------------

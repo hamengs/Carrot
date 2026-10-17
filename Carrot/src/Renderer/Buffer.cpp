@@ -13,7 +13,10 @@ namespace Carrot
             case RendererAPI::OpenGL:
                 return new OpenGLVertexBuffer(vertices,size);
         }
+        throw std::runtime_error("Unknown RendererAPI");
+        return 0;
     }
+
     IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t size){
         switch(Renderer::GetAPI()){
             case RendererAPI::None:
@@ -21,5 +24,7 @@ namespace Carrot
             case RendererAPI::OpenGL:
                 return new OpenGLIndexBuffer(indices,size);
         }
+        throw std::invalid_argument("Unknown ShaderDataType");
+        return 0;
     }
 }

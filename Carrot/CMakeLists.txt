@@ -27,11 +27,15 @@ add_library(Carrot STATIC
     
     src/Platform/OpenGL/OpenGLRenderContext.cpp
     src/Platform/OpenGL/OpenGLBuffer.cpp
+    src/Platform/OpenGL/OpenGLVertexArray.cpp
+    src/Platform/OpenGL/OpenGLVertexArray.h
 
     src/Renderer/Shader.cpp
     src/Renderer/Shader.h
     src/Renderer/Buffer.cpp
     src/Renderer/Buffer.h
+    src/Renderer/VertexArray.cpp
+    src/Renderer/VertexArray.h
     src/Renderer/Renderer.h
     src/Renderer/Renderer.cpp
 )

@@ -6,11 +6,25 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Input.h"
 
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+
 namespace Carrot
 {
+    //测试读取文件代码,后期删除
+    static std::string ReadFile(const std::string& path)
+    {
+        std::ifstream file(path);
 
+        if (!file.is_open())
+            throw std::runtime_error("Cannot open shader file: " + path);
 
+        std::ostringstream contents;
+        contents << file.rdbuf();
 
+        return contents.str();
+    }
 
     Application::Application(/* args */)
     {
@@ -19,13 +33,41 @@ namespace Carrot
         //std::bind生成一个可调用对象,一般用auto保存,具体标准由实现库决定,
         //OnEvent 是成员函数，绑定 this 指定当前应用对象；_1 将回调收到的第一个参数传给 OnEvent。
         m_Window->SetEventCallback(std::bind(&Application::OnEvent,this,std::placeholders::_1)); //保存处理函数，此处并不实际调用
-        
+
         //由layerstack决定什么时候释放资源,所以使用普通指针而不是uniqueptr,不然会双重释放
         m_ImGuiLayer = new ImGuiLayer(m_Window.get());
         PushOverLayer(m_ImGuiLayer); //get相当于获取智能指针
 
         //初始化Input系统,因为window在application创建所以在这里初始化需要window的系统
         Input::Init(*m_Window);
+
+                //三角形测试代码
+        float vertices[3][3] = {
+            {-0.5,-0.5,0.0},
+            {0.5,-0.5,0.0},
+            {0.0,0.5,0.0}
+        };
+
+        unsigned int indices[3] = {0,1,2};
+        //让工厂决定创建的对象,Create已经new了对象了,这里不能用make unique,使用reset把new出来的对象转移给智能指针管理
+        m_VAO.reset(VertexArray::Create());
+        m_VAO->Bind();
+
+        std::shared_ptr<VertexBuffer> vbo(VertexBuffer::Create(vertices[0], sizeof(vertices)));
+        vbo->SetLayout({
+            {ShaderDataType::FLOAT3, "a_Postion"},
+        });
+
+        m_VAO->AddVertexBuffer(vbo);
+
+        std::shared_ptr<IndexBuffer> ib(IndexBuffer::Create(indices,sizeof(indices)));
+
+        m_VAO->SetIndexBuffer(ib);
+
+        const std::string vertexShader = ReadFile("Carrot/src/Shaders/vertexShader.vs");
+        const std::string fragShader = ReadFile("Carrot/src/Shaders/fragShader.fs");
+        m_Shader = std::make_shared<Shader>(vertexShader,fragShader);
+
     }
 
     Application::~Application()
@@ -53,8 +95,12 @@ namespace Carrot
                 layer->OnImGuiRender();
             }
             m_ImGuiLayer->End();
-            glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT,nullptr);
-            
+
+            //绘制代码
+            m_VAO->Bind();
+            m_Shader->Bind();
+            glDrawElements(GL_TRIANGLES,m_VAO->GetIndexBuffer()->GetCount(),GL_UNSIGNED_INT,nullptr);
+
             //交换缓冲
             m_Window->SwapBuffers();
         }

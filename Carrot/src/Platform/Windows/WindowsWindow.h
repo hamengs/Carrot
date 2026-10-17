@@ -2,7 +2,6 @@
 
 #include "Window.h"
 #include "Platform/OpenGL/OpenGLRenderContext.h"
-#include "Renderer/Buffer.h"
 
 struct GLFWwindow;
 
@@ -39,15 +38,12 @@ namespace Carrot{
 
     private:
         GLFWwindow* m_Window = nullptr;
-        std::unique_ptr<RenderContext> m_Context;
-        
-        uint32_t m_VAO;
-        std::unique_ptr<VertexBuffer> m_VBO;
-        std::unique_ptr<IndexBuffer> m_EBO;
-
 
         void ShutDown(); //关闭窗口函数,在析构时调用
         void Init(const WindowProps& props); //初始化函数,在构造时调用,需要一个props来指定初始化参数
+
+        //初始化窗口需要一个渲染上下文
+        std::unique_ptr<RenderContext> m_Context;
 
         //当前窗口的一些数据,长宽也可以加入,暂时没加入,只有垂直同步和当前窗口的回调函数,
         //不放在windows.h是因为这些是运行时数据,window调用具体实现类方法来创建窗口所以不需要运行时的数据,最终取决于实现方式

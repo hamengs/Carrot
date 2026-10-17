@@ -2,9 +2,11 @@
 
 #include "Core.h"
 #include "Renderer/Buffer.h"
+#include <memory>
 
 namespace Carrot
 {
+
     class OpenGLVertexBuffer : public VertexBuffer{
     public:
         OpenGLVertexBuffer(float* vertices, uint32_t size);
@@ -12,19 +14,24 @@ namespace Carrot
         virtual void Bind() override;
         virtual void UnBind() override;
         inline uint32_t GetSize(){return m_Size;}
+        virtual void SetLayout(const BufferLayout& layout) override;
+        virtual inline const BufferLayout& GetLayout() const override{return m_Layout;}
 
     private:
+        //vbo的布局描述
+        BufferLayout m_Layout;
         uint32_t m_VertexID;
         uint32_t m_Size;
+
     };
-    
+
     class OpenGLIndexBuffer : public IndexBuffer{
     public:
         OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
         virtual ~OpenGLIndexBuffer() override;
         virtual void Bind() override;
         virtual void UnBind() override;
-        inline uint32_t GetCount(){return m_Count;}
+        virtual inline uint32_t GetCount() override{return m_Count;}
 
     private:
         uint32_t m_IndexID;
