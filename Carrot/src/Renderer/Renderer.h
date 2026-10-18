@@ -1,16 +1,16 @@
 #pragma once
 
+#include "RendererAPI.h"
+#include <memory>
+
 namespace Carrot
 {
-    //配置文件,编译时可以改变渲染api
-    enum class RendererAPI{
-        None = 0, OpenGL = 1
-    };
-
+    //顶层绘画类负责调用底层RenderCommand
     class Renderer{
     public:
-        inline static RendererAPI GetAPI(){return s_RendererAPI;}
-    private:
-        static RendererAPI s_RendererAPI;
+        static void BeginScene();
+        static void Submit(std::shared_ptr<VertexArray> vao);
+        static void EndScene();
+        inline static RendererAPI::API GetAPI(){return RendererAPI::GetAPI();}
     };
 } // namespace Carrot

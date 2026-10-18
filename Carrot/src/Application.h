@@ -5,14 +5,12 @@
 #include "Window.h"
 #include "Events/ApplicationEvent.h"
 #include "LayerStack.h"
-#include "ImGui/ImGuiLayer.h"
-#include "Renderer/Shader.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Platform/OpenGL/OpenGLRenderContext.h"
 
 namespace Carrot
 {
+    class ImGuiLayer;
+    class Shader;
+    class VertexArray;
 
     class CARROT_API Application
     {

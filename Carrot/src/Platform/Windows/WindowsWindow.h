@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Window.h"
-#include "Platform/OpenGL/OpenGLRenderContext.h"
+#include "Renderer/RenderContext.h"
 
 struct GLFWwindow;
 

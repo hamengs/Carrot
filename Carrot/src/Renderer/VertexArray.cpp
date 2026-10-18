@@ -7,9 +7,9 @@ namespace Carrot
     //同样的根据不同的api创建不同的api对象
     VertexArray* VertexArray::Create(){
         switch(Renderer::GetAPI()){
-            case RendererAPI::None:
+            case RendererAPI::API::None:
                 return nullptr;
-            case RendererAPI::OpenGL:
+            case RendererAPI::API::OpenGL:
                 return new OpenGLVertexArray();
         }
         throw std::invalid_argument("Unknown RendererAPI");

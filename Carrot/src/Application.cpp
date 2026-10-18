@@ -1,14 +1,19 @@
 #include "Application.h"
-#include <cstdio>
 #include "Window.h"
-#include "Log.h"
-#include <GLFW/glfw3.h>
 #include "ImGui/ImGuiLayer.h"
 #include "Input.h"
 
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+
+#include "Renderer/Shader.h"
+#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Renderer.h"
+#include <functional>
+#include <string>
+#include "Renderer/RenderCommand.h"
 
 namespace Carrot
 {
@@ -82,10 +87,13 @@ namespace Carrot
             Input::BeginFrame();
             // 先处理事件填入本帧输入，再让各层查询。
             m_Window->PollEvents();
-            if (!m_Running)
+            if (!m_Running){
                 break;
-            glClearColor(0.1f,0.1f,0.1f,1);
-            glClear(GL_COLOR_BUFFER_BIT);
+            }
+            RenderCommand::SetClearColor(glm::vec4(0.1f,0.1f,0.1f,1));
+
+            RenderCommand::Clear();
+
             for(auto layer : m_Layers){
                 layer->OnUpdate();
             }
@@ -97,9 +105,11 @@ namespace Carrot
             m_ImGuiLayer->End();
 
             //绘制代码
-            m_VAO->Bind();
+            Renderer::BeginScene();
             m_Shader->Bind();
-            glDrawElements(GL_TRIANGLES,m_VAO->GetIndexBuffer()->GetCount(),GL_UNSIGNED_INT,nullptr);
+            Renderer::Submit(m_VAO);
+
+            Renderer::EndScene();
 
             //交换缓冲
             m_Window->SwapBuffers();

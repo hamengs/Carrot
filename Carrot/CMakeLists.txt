@@ -29,6 +29,8 @@ add_library(Carrot STATIC
     src/Platform/OpenGL/OpenGLBuffer.cpp
     src/Platform/OpenGL/OpenGLVertexArray.cpp
     src/Platform/OpenGL/OpenGLVertexArray.h
+    src/Platform/OpenGL/OpenGLRendererAPI.h
+    src/Platform/OpenGL/OpenGLRendererAPI.cpp
 
     src/Renderer/Shader.cpp
     src/Renderer/Shader.h
@@ -38,6 +40,10 @@ add_library(Carrot STATIC
     src/Renderer/VertexArray.h
     src/Renderer/Renderer.h
     src/Renderer/Renderer.cpp
+    src/Renderer/RendererAPI.h
+    src/Renderer/RendererAPI.cpp
+    src/Renderer/RenderCommand.h
+    src/Renderer/RenderCommand.cpp
 )
 
 target_precompile_headers(Carrot PRIVATE

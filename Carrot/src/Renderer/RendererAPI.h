@@ -1,0 +1,25 @@
+#pragma once
+#include <memory>
+#include <glm/glm.hpp>
+
+namespace Carrot
+{
+    class VertexArray;
+    //抽象类,对于不同的Renderer,比如opengl,vulkan,需要实现不同的派生类
+    class RendererAPI{
+    public: 
+        enum class API{
+            None = 0, OpenGL = 1
+        };
+
+        virtual void SetClearColor(const glm::vec4& color) = 0;
+        virtual void Clear() = 0;
+        virtual void DrawIndexed(const std::shared_ptr<VertexArray> vao) = 0;
+        //返回实际使用的api
+        inline static API GetAPI(){return api;}
+        static RendererAPI* Create();
+    private:
+        static API api;
+    };
+}
+

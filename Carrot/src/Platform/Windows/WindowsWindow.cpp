@@ -1,4 +1,5 @@
 #include "WindowsWindow.h"
+#include "Platform/OpenGL/OpenGLRenderContext.h"
 #include "Log.h"
 
 

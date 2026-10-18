@@ -1,7 +1,18 @@
 #include "Renderer.h"
+#include "RenderCommand.h"
 
 namespace Carrot
 {
-    //具体改变可以放在这
-    RendererAPI Renderer::s_RendererAPI = RendererAPI::OpenGL;
+    void Renderer::BeginScene(){
+
+    }
+
+    void Renderer::EndScene(){
+
+    }
+
+    void Renderer::Submit(std::shared_ptr<VertexArray> vao){
+        RenderCommand::DrawIndexed(vao);
+    }
+
 }

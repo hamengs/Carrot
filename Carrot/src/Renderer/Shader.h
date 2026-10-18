@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "CarrotPCH.h"
+#include <cstdint>
+#include <string>
 
 namespace Carrot
 {
