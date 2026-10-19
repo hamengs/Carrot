@@ -20,10 +20,10 @@
         virtual void OnImGuiRender(){}
 
         //可有可无,不会对性能造成很大影响
-        inline const std::string& GetName() const {return m_DebugName;}
+        inline const std::string& GetName() const {return m_LayerName;}
 
     protected:
-        std::string m_DebugName;
+        std::string m_LayerName;
     };
  } // namespace Carrot
  

@@ -3,10 +3,6 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Input.h"
 
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-
 #include "Renderer/Shader.h"
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
@@ -17,19 +13,6 @@
 
 namespace Carrot
 {
-    //测试读取文件代码,后期删除
-    static std::string ReadFile(const std::string& path)
-    {
-        std::ifstream file(path);
-
-        if (!file.is_open())
-            throw std::runtime_error("Cannot open shader file: " + path);
-
-        std::ostringstream contents;
-        contents << file.rdbuf();
-
-        return contents.str();
-    }
 
     Application::Application(/* args */)
     {
@@ -45,33 +28,6 @@ namespace Carrot
 
         //初始化Input系统,因为window在application创建所以在这里初始化需要window的系统
         Input::Init(*m_Window);
-
-                //三角形测试代码
-        float vertices[3][3] = {
-            {-0.5,-0.5,0.0},
-            {0.5,-0.5,0.0},
-            {0.0,0.5,0.0}
-        };
-
-        unsigned int indices[3] = {0,1,2};
-        //让工厂决定创建的对象,Create已经new了对象了,这里不能用make unique,使用reset把new出来的对象转移给智能指针管理
-        m_VAO.reset(VertexArray::Create());
-        m_VAO->Bind();
-
-        std::shared_ptr<VertexBuffer> vbo(VertexBuffer::Create(vertices[0], sizeof(vertices)));
-        vbo->SetLayout({
-            {ShaderDataType::FLOAT3, "a_Postion"},
-        });
-
-        m_VAO->AddVertexBuffer(vbo);
-
-        std::shared_ptr<IndexBuffer> ib(IndexBuffer::Create(indices,sizeof(indices)));
-
-        m_VAO->SetIndexBuffer(ib);
-
-        const std::string vertexShader = ReadFile("Carrot/src/Shaders/vertexShader.vs");
-        const std::string fragShader = ReadFile("Carrot/src/Shaders/fragShader.fs");
-        m_Shader = std::make_shared<Shader>(vertexShader,fragShader);
 
     }
 
@@ -90,9 +46,6 @@ namespace Carrot
             if (!m_Running){
                 break;
             }
-            RenderCommand::SetClearColor(glm::vec4(0.1f,0.1f,0.1f,1));
-
-            RenderCommand::Clear();
 
             for(auto layer : m_Layers){
                 layer->OnUpdate();
@@ -103,13 +56,6 @@ namespace Carrot
                 layer->OnImGuiRender();
             }
             m_ImGuiLayer->End();
-
-            //绘制代码
-            Renderer::BeginScene();
-            m_Shader->Bind();
-            Renderer::Submit(m_VAO);
-
-            Renderer::EndScene();
 
             //交换缓冲
             m_Window->SwapBuffers();

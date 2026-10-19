@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <glm/glm.hpp>
 
 namespace Carrot
 {
@@ -12,6 +13,8 @@ namespace Carrot
 
         void Bind();
         void UnBind();
+
+        void UploadUniformMat4f(const std::string& name, const glm::mat4& matrix);
 
     private:
         uint32_t m_ShaderID = 0;

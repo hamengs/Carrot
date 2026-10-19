@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include "Log.h"
 #include <vector>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Carrot
 {
@@ -122,5 +123,11 @@ namespace Carrot
 
     void Shader::UnBind(){
         glUseProgram(0);
+    }
+
+    void Shader::UploadUniformMat4f(const std::string& name, const glm::mat4& matrix){
+        GLint location = glGetUniformLocation(m_ShaderID,name.c_str());
+        //使用它glm value_ptr把matrx转换成opengl需要的指针,需要引入头文件
+        glUniformMatrix4fv(location,1,GL_FALSE,glm::value_ptr(matrix));
     }
 }

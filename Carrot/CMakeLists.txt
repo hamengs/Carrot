@@ -40,6 +40,8 @@ add_library(Carrot STATIC
     src/Renderer/VertexArray.h
     src/Renderer/Renderer.h
     src/Renderer/Renderer.cpp
+    src/Renderer/OrthographicCamera.h
+    src/Renderer/OrthographicCamera.cpp
     src/Renderer/RendererAPI.h
     src/Renderer/RendererAPI.cpp
     src/Renderer/RenderCommand.h

@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Events/ApplicationEvent.h"
 #include "LayerStack.h"
+#include "Renderer/OrthographicCamera.h"
 
 namespace Carrot
 {
@@ -23,8 +24,6 @@ namespace Carrot
 
         bool OnWindowClose(WindowCloseEvent& e);
 
-        std::shared_ptr<VertexArray> m_VAO;
-        std::shared_ptr<Shader> m_Shader;
     public:
         Application(/* args */);
         virtual ~Application();
