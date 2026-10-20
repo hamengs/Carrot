@@ -3,10 +3,7 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Input.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/Renderer.h"
+
 #include <functional>
 #include <string>
 #include "Renderer/RenderCommand.h"
@@ -39,7 +36,12 @@ namespace Carrot
 
     void Application::Run(){
 
+        Time::Init(); //在这里初始化时间,主循环开始前,窗口构造好之后
+
         while(m_Running){
+
+            Time::OnUpdate();// 时间第一个更新,放在所有模块前面
+
             Input::BeginFrame();
             // 先处理事件填入本帧输入，再让各层查询。
             m_Window->PollEvents();

@@ -13,13 +13,16 @@ add_library(Carrot STATIC
     src/KeyCode.h
     src/Input.cpp
 
+    src/Core/Time.h
+    src/Core/Time.cpp
+
     src/Events/Events.cpp
     src/Events/Event.h
     src/Events/ApplicationEvent.h
     src/Events/KeyEvent.h
     src/Events/MouseEvent.h
 
-
+    src/Platform/Windows/WindowsTime.cpp
     src/Platform/Windows/WindowsWindow.h
     src/Platform/Windows/WindowsWindow.cpp
     src/Platform/Windows/WindowsInput.h
@@ -31,6 +34,8 @@ add_library(Carrot STATIC
     src/Platform/OpenGL/OpenGLVertexArray.h
     src/Platform/OpenGL/OpenGLRendererAPI.h
     src/Platform/OpenGL/OpenGLRendererAPI.cpp
+    src/Platform/OpenGL/OpenGLShader.h
+    src/Platform/OpenGL/OpenGLShader.cpp
 
     src/Renderer/Shader.cpp
     src/Renderer/Shader.h

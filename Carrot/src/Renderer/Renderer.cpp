@@ -14,9 +14,16 @@ namespace Carrot
 
     }
 
-    void Renderer::Submit(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> vao){
+    void Renderer::Submit(
+            const Material& material,
+            std::shared_ptr<VertexArray> vao,
+            const glm::mat4 model
+        ){
+        const auto& shader = material.GetShader();
         shader->Bind();
-        shader->UploadUniformMat4f("ProjectionViewMatrix",s_SceneData->ProjectionViewMatrix);
+        shader->SetMat4("ProjectionViewMatrix",s_SceneData->ProjectionViewMatrix);
+        shader->SetMat4("ModelMatrix",model);
+        shader->SetFloat4("u_Color", material.GetColor());
         RenderCommand::DrawIndexed(vao);
     }
 

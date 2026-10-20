@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderCommand.h"
@@ -12,6 +12,7 @@
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/Material.h"
 
 //测试层
 class FooLayer : public Carrot::Layer{
@@ -60,27 +61,61 @@ public:
 
         const std::string vertexShader = ReadFile("Carrot/src/Shaders/vertexShader.vs");
         const std::string fragShader = ReadFile("Carrot/src/Shaders/fragShader.fs");
-        m_Shader = std::make_shared<Carrot::Shader>(vertexShader,fragShader);
+        m_Shader = Carrot::Shader::Create(vertexShader,fragShader);
+
+        //创建材质
+        redMaterial = new Carrot::Material(m_Shader);
+        blueMaterial = new Carrot::Material(m_Shader);
+
+        redMaterial->SetColor(glm::vec4(1.0f,0.0f,0.0f,1.0f));
+        blueMaterial->SetColor(glm::vec4(0.0f,0.0f,1.0f,1.0f));
     }
 
     void OnUpdate() override{
         //测试控制代码
         if(Carrot::Input::IsKeyDown(CT_KEY_DOWN)){
-            m_CameraPos.y -= m_CameraMoveSpeed;
+            m_CameraPos.y -= m_CameraMoveSpeed*Carrot::Time::GetDeltaTime();
         }else if(Carrot::Input::IsKeyDown(CT_KEY_UP)){
-            m_CameraPos.y += m_CameraMoveSpeed; 
+            m_CameraPos.y += m_CameraMoveSpeed*Carrot::Time::GetDeltaTime(); 
         }
         if(Carrot::Input::IsKeyDown(CT_KEY_LEFT)){
-            m_CameraPos.x -= m_CameraMoveSpeed;
+            m_CameraPos.x -= m_CameraMoveSpeed*Carrot::Time::GetDeltaTime();
         }else if(Carrot::Input::IsKeyDown(CT_KEY_RIGHT)){
-            m_CameraPos.x += m_CameraMoveSpeed; 
+            m_CameraPos.x += m_CameraMoveSpeed*Carrot::Time::GetDeltaTime(); 
         }
         m_Camera->SetPosition(m_CameraPos);
+        //三角形模型控制
+        if(Carrot::Input::IsKeyDown(CT_KEY_S)){
+            m_TrianglePos.y -= m_TriangleMoveSpeed*Carrot::Time::GetDeltaTime();
+        }else if(Carrot::Input::IsKeyDown(CT_KEY_W)){
+            m_TrianglePos.y += m_TriangleMoveSpeed*Carrot::Time::GetDeltaTime(); 
+        }
+        if(Carrot::Input::IsKeyDown(CT_KEY_A)){
+            m_TrianglePos.x -= m_TriangleMoveSpeed*Carrot::Time::GetDeltaTime();
+        }else if(Carrot::Input::IsKeyDown(CT_KEY_D)){
+            m_TrianglePos.x += m_TriangleMoveSpeed*Carrot::Time::GetDeltaTime(); 
+        }
+
+        
         //绘制代码
         Carrot::RenderCommand::SetClearColor(glm::vec4(0.1f,0.1f,0.1f,1));
         Carrot::RenderCommand::Clear();
         Carrot::Renderer::BeginScene(*m_Camera);
-        Carrot::Renderer::Submit(m_Shader,m_VAO);
+        for(int i = 0; i<5; i++){
+            for(int j = 0; j<5; j++){
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model,glm::vec3(0.1f,0.1f,1.0f));
+                model = glm::translate(model,glm::vec3(1.0f*j,1.0f*i,0.0f));
+                model = glm::translate(model,m_TrianglePos);
+                if(j%2==0){
+                    Carrot::Renderer::Submit(redMaterial,m_VAO,model);
+                }else{
+                    Carrot::Renderer::Submit(blueMaterial,m_VAO,model);
+                }
+
+            }
+        }
+
         Carrot::Renderer::EndScene();
 
     }
@@ -103,7 +138,15 @@ private:
         std::shared_ptr<Carrot::Shader> m_Shader;
         std::shared_ptr<Carrot::OrthographicCamera> m_Camera;
         glm::vec3 m_CameraPos = glm::vec3(0.0f);
-        float m_CameraMoveSpeed = 0.01f;
+        float m_CameraMoveSpeed = 5.0f;
+
+        glm::vec3 m_TrianglePos = glm::vec3(0.0f);
+        float m_TriangleMoveSpeed = 5.0f;
+
+        //材质
+        Carrot::Material* redMaterial;
+        Carrot::Material* blueMaterial;
+
 };
 
 class SandBox : public Carrot::Application
