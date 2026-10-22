@@ -12,6 +12,9 @@ add_library(Carrot STATIC
     src/Input.h
     src/KeyCode.h
     src/Input.cpp
+    src/File.h
+    src/OrthographicCameraController.h
+    src/OrthographicCameraController.cpp
 
     src/Core/Time.h
     src/Core/Time.cpp
@@ -36,6 +39,8 @@ add_library(Carrot STATIC
     src/Platform/OpenGL/OpenGLRendererAPI.cpp
     src/Platform/OpenGL/OpenGLShader.h
     src/Platform/OpenGL/OpenGLShader.cpp
+    src/Platform/OpenGL/OpenGLTexture2D.h
+    src/Platform/OpenGL/OpenGLTexture2D.cpp
 
     src/Renderer/Shader.cpp
     src/Renderer/Shader.h
@@ -51,6 +56,8 @@ add_library(Carrot STATIC
     src/Renderer/RendererAPI.cpp
     src/Renderer/RenderCommand.h
     src/Renderer/RenderCommand.cpp
+    src/Renderer/Texture.h
+    src/Renderer/Texture.cpp
 )
 
 target_precompile_headers(Carrot PRIVATE
@@ -72,6 +79,8 @@ target_sources(Carrot PRIVATE
 target_link_libraries(Carrot PUBLIC imgui)
 
 target_link_libraries(Carrot PUBLIC spdlog::spdlog)
+
+target_link_libraries(Carrot PRIVATE stb_image)
 
 target_link_libraries(Carrot PRIVATE glfw glad)
 

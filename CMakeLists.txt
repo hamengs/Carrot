@@ -31,6 +31,14 @@ target_include_directories(imgui PUBLIC
 
 target_link_libraries(imgui PRIVATE glfw)
 
+add_library(stb_image STATIC
+    Carrot/src/Third_party/StbImage.cpp
+)
+
+target_include_directories(stb_image PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/thrid_party/stb_image"
+)
+
 add_subdirectory(thrid_party/glfw)
 add_subdirectory(thrid_party/spdlog)
 add_subdirectory(Carrot)

@@ -25,7 +25,7 @@ namespace Carrot
 
         //初始化Input系统,因为window在application创建所以在这里初始化需要window的系统
         Input::Init(*m_Window);
-
+        Renderer::Init();
     }
 
     Application::~Application()
@@ -48,10 +48,13 @@ namespace Carrot
             if (!m_Running){
                 break;
             }
-
-            for(auto layer : m_Layers){
-                layer->OnUpdate();
+            
+            if(!m_IsMinimize){
+                for(auto layer : m_Layers){
+                    layer->OnUpdate();
+                }
             }
+
             //每个层调用自己的guiRender来绘制gui
             m_ImGuiLayer->Begin();
             for(auto layer : m_Layers){
@@ -73,6 +76,9 @@ namespace Carrot
         dispatcher.Dispatch<WindowCloseEvent>
         (std::bind(&Application::OnWindowClose,this, std::placeholders::_1));
 
+        dispatcher.Dispatch<WindowResizeEvent>
+        (std::bind(&Application::OnWindowResize,this, std::placeholders::_1));
+
         for(auto it = m_Layers.end(); it!=m_Layers.begin();){
             //先检查是否解决再去--,和调用OnEvent,否则已完成的事件依然会调用一次OnEvent
             if(event.Handled()){
@@ -87,6 +93,16 @@ namespace Carrot
     bool Application::OnWindowClose(WindowCloseEvent&){
         m_Running = false;
         return true;
+    }
+
+    bool Application::OnWindowResize(WindowResizeEvent& e){
+        if(e.GetWidth()==0||e.GetHeight()==0){
+            m_IsMinimize = true;
+        }else{
+            m_IsMinimize = false;
+        }
+        Renderer::OnWindowResize(e.GetWidth(),e.GetHeight());
+        return false;
     }
 
     void Application::PushLayer(Layer* layer){

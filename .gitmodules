@@ -10,3 +10,6 @@
 [submodule "thrid_party/glm"]
 	path = thrid_party/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "thrid_party/stbi_image"]
+	path = thrid_party/stb_image
+	url = https://github.com/nothings/stb

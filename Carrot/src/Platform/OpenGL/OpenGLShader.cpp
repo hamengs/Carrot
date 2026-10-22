@@ -89,9 +89,10 @@ namespace Carrot
     }
 
     OpenGLShader::OpenGLShader(
+        const std::string& name,
         const std::string& vertexSrc,
         const std::string& fragmentSrc
-    ){
+    ):m_Name(name){
         const GLchar* vertexSource = vertexSrc.c_str();
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 

@@ -17,7 +17,7 @@ int main()
     {
         CT_CORE_INFO("Log Initialized");
 
-        std::unique_ptr<Carrot::Application> app(CreateApplication());
+        Carrot::Scope<Carrot::Application> app(CreateApplication());
         app->Run();
     }
     catch (const std::exception& error)

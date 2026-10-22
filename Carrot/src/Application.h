@@ -7,6 +7,7 @@
 #include "LayerStack.h"
 #include "Renderer/OrthographicCamera.h"
 #include "Core/Time.h"
+#include "Renderer/Renderer.h"
 
 namespace Carrot
 {
@@ -19,7 +20,8 @@ namespace Carrot
     private:
         /* data */
         bool m_Running = true;
-        std::unique_ptr<Window> m_Window;
+        bool m_IsMinimize = false;
+        Scope<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer = nullptr;
         LayerStack m_Layers;
         bool OnWindowClose(WindowCloseEvent& e);
@@ -34,6 +36,7 @@ namespace Carrot
         void PushLayer(Layer* layer);
         void PushOverLayer(Layer* layer);
         Window& GetWindow() { return *m_Window; }
+        bool OnWindowResize(WindowResizeEvent& e);
     };
     
 

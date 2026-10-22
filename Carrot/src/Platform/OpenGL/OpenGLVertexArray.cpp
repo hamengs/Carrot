@@ -18,6 +18,7 @@ namespace Carrot
             case ShaderDataType::INT4   : return GL_INT;
             case ShaderDataType::BOOL   : return GL_BOOL;
         }
+        throw std::invalid_argument("Unknown type");
     }
 
     OpenGLVertexArray::OpenGLVertexArray(){
@@ -37,7 +38,7 @@ namespace Carrot
         glBindVertexArray(0);
     }
 
-    void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer){
+    void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer){
         Bind(); //绑定VAO
         vertexBuffer->Bind();//绑定VBO
         m_VertexBuffers.push_back(vertexBuffer); //把VBO入数组
@@ -60,7 +61,7 @@ namespace Carrot
         }
     }
 
-    void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer){
+    void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer){
         Bind();
         m_IndexBuffer = indexBuffer;
         indexBuffer->Bind();

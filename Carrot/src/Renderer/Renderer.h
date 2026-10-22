@@ -5,16 +5,19 @@
 #include "Renderer/OrthographicCamera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Material.h"
+#include "Core.h"
 
 namespace Carrot
 {
     //顶层绘画类负责调用底层RenderCommand
     class Renderer{
     public:
-        static void BeginScene(OrthographicCamera& camera);
+        static void Init();
+        static void BeginScene(const OrthographicCamera& camera);
+        static void OnWindowResize(uint32_t width, uint32_t height);
         static void Submit(
                 const Material& material,
-                const std::shared_ptr<VertexArray> vao,
+                const Ref<VertexArray> vao,
                 const glm::mat4 model = glm::mat4(1.0f)
             );
         static void EndScene();

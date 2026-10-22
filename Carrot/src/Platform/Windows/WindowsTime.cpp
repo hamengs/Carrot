@@ -8,7 +8,7 @@ namespace Carrot
 {
 
     float Time::GetPlatformTime(){
-        return glfwGetTime();
+        return static_cast<float>(glfwGetTime());
     }
 
 }

@@ -39,7 +39,7 @@ namespace Carrot
 
         //unique_ptr 在正常离开作用域或异常展开栈时释放对象（不保证进程强制终止时清理）。
         //static 允许直接用 Window::Create 调用，props 指定标题、宽度和高度。
-        static std::unique_ptr<Window> Create(
+        static Scope<Window> Create(
             const WindowProps& props = WindowProps()
         );
 

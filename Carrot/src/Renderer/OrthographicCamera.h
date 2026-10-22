@@ -18,7 +18,7 @@ namespace Carrot
         //修改成员变量后重新计算以获得生效
         void SetPosition(glm::vec3 position){m_Position = position; ReCalculateProjectionViewMatrix();}
         void SetRotation(float rotation){m_Rotation = rotation; ReCalculateProjectionViewMatrix();}
-
+        void SetProjection(float left, float right, float bottom, float top);
         void ReCalculateProjectionViewMatrix();
 
     private:

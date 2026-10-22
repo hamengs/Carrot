@@ -9,6 +9,8 @@ namespace Carrot
     {
     public:
         OpenGLShader(
+            
+            const std::string& name,
             const std::string& vertexSrc,
             const std::string& fragmentSrc
         );
@@ -40,5 +42,6 @@ namespace Carrot
 
     private:
         uint32_t m_ShaderID = 0;
+        const std::string m_Name;
     };
 }

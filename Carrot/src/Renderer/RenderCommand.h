@@ -6,6 +6,10 @@ namespace Carrot{
     //RenderCommand包含了各种稍微实际的绘制指令,通过持有的s_RendererAPI指针来调用不同rendererAPI的绘制指令
     class RenderCommand{
     public:
+        inline static void Init(){
+            s_RendererAPI->Init();
+        }
+
         inline static void SetClearColor(const glm::vec4& color){
             s_RendererAPI->SetClearColor(color);
         }
@@ -14,8 +18,12 @@ namespace Carrot{
             s_RendererAPI->Clear();
         }
 
-        inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vao){
+        inline static void DrawIndexed(const Ref<VertexArray>& vao){
             s_RendererAPI->DrawIndexed(vao);
+        }
+
+        inline static void SetViewport(uint32_t width, uint32_t height){
+            s_RendererAPI->SetViewport(width,height);
         }
 
         inline static RendererAPI* GetRenderAPI(){return s_RendererAPI;}

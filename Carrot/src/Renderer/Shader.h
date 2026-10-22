@@ -4,6 +4,8 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <memory>
+#include "Core.h"
+#include <unordered_map>
 
 namespace Carrot
 {
@@ -31,10 +33,26 @@ namespace Carrot
             const std::string& name,
             const glm::vec4& value
         ) = 0;
-
-        static std::shared_ptr<Shader> Create(      
+        //创建时必须明确名字
+        static Ref<Shader> Create(
+            const std::string& name,   
             const std::string& vertexSrc,
             const std::string& fragmentSrc
         );
+        
+    };
+
+    class ShaderLibrary{
+    public:
+        //使用一个library来做到shader可复用
+        void Add(const std::string& name, const Ref<Shader>& shader);
+        //直接加载路径来加载Shader
+        Ref<Shader> Load(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
+        Ref<Shader> Load( const std::string& vertexPath, const std::string& fragmentPath);
+        Ref<Shader> Get(const std::string& name);
+
+    private:
+        //使用hashmap来存储已经有的shaders
+        std::unordered_map<std::string,Ref<Shader>> m_Shaders;
     };
 }
