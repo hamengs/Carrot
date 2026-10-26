@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Core.h"
 #include "Renderer/Buffer.h"
+
 #include <memory>
 
 namespace Carrot
@@ -9,6 +10,7 @@ namespace Carrot
 
     class OpenGLVertexBuffer : public VertexBuffer{
     public:
+        OpenGLVertexBuffer(uint32_t size);
         OpenGLVertexBuffer(float* vertices, uint32_t size);
         virtual ~OpenGLVertexBuffer() override;
         virtual void Bind() override;
@@ -16,7 +18,7 @@ namespace Carrot
         inline uint32_t GetSize(){return m_Size;}
         virtual void SetLayout(const BufferLayout& layout) override;
         virtual inline const BufferLayout& GetLayout() const override{return m_Layout;}
-
+        virtual void SetData(const void* data, uint32_t size) override;
     private:
         //vbo的布局描述
         BufferLayout m_Layout;

@@ -1,15 +1,20 @@
 #include "Platform/OpenGL/OpenGLShader.h"
-#include <glm/gtc/type_ptr.hpp>
+
+#include "Core/Log.h"
+#include "Profiler/Profiler.h"
+
 #include <glad/glad.h>
-#include "Log.h"
-#include <vector>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <limits>
 #include <stdexcept>
+#include <vector>
 
 namespace Carrot
 {
     OpenGLShader::~OpenGLShader()
     {
+        PROFILER_FUNCTION();
         if (m_ShaderID != 0)
             glDeleteProgram(m_ShaderID);
     }
@@ -93,6 +98,7 @@ namespace Carrot
         const std::string& vertexSrc,
         const std::string& fragmentSrc
     ):m_Name(name){
+        PROFILER_SCOPE(name);
         const GLchar* vertexSource = vertexSrc.c_str();
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 

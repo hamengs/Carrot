@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Event.h"
+#include "Events/Event.h"
+
 #include <sstream>
 
 namespace Carrot

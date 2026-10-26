@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Core.h"
-#include <memory>
+#include "Core/Core.h"
+
 #include <spdlog/spdlog.h>
+
+#include <memory>
 
 namespace Carrot
 {

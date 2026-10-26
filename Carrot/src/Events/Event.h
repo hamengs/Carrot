@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core.h"
-#include <string>
+#include "Core/Core.h"
+
 #include <functional>
+#include <string>
 
 namespace Carrot
 {

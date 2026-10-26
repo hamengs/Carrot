@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Shader.h"
+
 #include <cstdint>
 
 namespace Carrot

@@ -1,10 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
+#include "Core/Core.h"
+
 #include <glm/glm.hpp>
+
+#include <cstdint>
 #include <memory>
-#include "Core.h"
+#include <string>
 #include <unordered_map>
 
 namespace Carrot

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Buffer.h"
+
 #include <memory>
 #include <vector>
 
@@ -13,7 +14,7 @@ namespace Carrot
         virtual void Bind() = 0;
         virtual void UnBind() = 0;
 
-        static VertexArray* Create();
+        static Ref<VertexArray> Create();
 
         //VAO会有VBO和IndexBuffer,所以这里赋予set和get方法
         virtual void AddVertexBuffer(

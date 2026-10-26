@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Core.h"
+#include "Events/Event.h"
+
+#include <functional>
 #include <memory>
 #include <string>
-#include "Events/Event.h"
-#include <functional>
 
 namespace Carrot
 {

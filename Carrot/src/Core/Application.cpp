@@ -1,18 +1,21 @@
-#include "Application.h"
-#include "Window.h"
-#include "ImGui/ImGuiLayer.h"
-#include "Input.h"
+#include "Core/Application.h"
 
+#include "Core/Input.h"
+#include "Core/Window.h"
+#include "ImGui/ImGuiLayer.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer2D.h"
+#include "Profiler/Profiler.h"
 
 #include <functional>
 #include <string>
-#include "Renderer/RenderCommand.h"
 
 namespace Carrot
 {
 
     Application::Application(/* args */)
     {
+        PROFILER_FUNCTION();
         //创建失败时异常传到入口 main，由入口记录错误并退出。
         m_Window = Window::Create();
         //std::bind生成一个可调用对象,一般用auto保存,具体标准由实现库决定,
@@ -30,15 +33,18 @@ namespace Carrot
 
     Application::~Application()
     {
+        PROFILER_FUNCTION();
         //关闭释放输入系统,谁初始化谁负责释放
+        Renderer2D::ShunDown();
         Input::ShutDown();
     }
 
     void Application::Run(){
-
+        PROFILER_FUNCTION();
         Time::Init(); //在这里初始化时间,主循环开始前,窗口构造好之后
 
         while(m_Running){
+            PROFILER_SCOPE("Frame");
 
             Time::OnUpdate();// 时间第一个更新,放在所有模块前面
 
@@ -50,17 +56,21 @@ namespace Carrot
             }
             
             if(!m_IsMinimize){
+                PROFILER_SCOPE("Layer updates");
                 for(auto layer : m_Layers){
                     layer->OnUpdate();
                 }
             }
 
             //每个层调用自己的guiRender来绘制gui
-            m_ImGuiLayer->Begin();
-            for(auto layer : m_Layers){
-                layer->OnImGuiRender();
+            {
+                PROFILER_SCOPE("ImGui frame");
+                m_ImGuiLayer->Begin();
+                for(auto layer : m_Layers){
+                    layer->OnImGuiRender();
+                }
+                m_ImGuiLayer->End();
             }
-            m_ImGuiLayer->End();
 
             //交换缓冲
             m_Window->SwapBuffers();
@@ -68,6 +78,7 @@ namespace Carrot
     }
 
     void Application::OnEvent(Event& event){
+        PROFILER_FUNCTION();
         // 原始输入先记录，不能因为某个 Layer 消费事件而漏掉松开。
         Input::OnEvent(event);
         //CT_CORE_INFO("Received event: {}", event.ToString());
@@ -91,11 +102,13 @@ namespace Carrot
     }
 
     bool Application::OnWindowClose(WindowCloseEvent&){
+        PROFILER_FUNCTION();
         m_Running = false;
         return true;
     }
 
     bool Application::OnWindowResize(WindowResizeEvent& e){
+        PROFILER_FUNCTION();
         if(e.GetWidth()==0||e.GetHeight()==0){
             m_IsMinimize = true;
         }else{
@@ -106,11 +119,13 @@ namespace Carrot
     }
 
     void Application::PushLayer(Layer* layer){
+        PROFILER_FUNCTION();
         m_Layers.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverLayer(Layer* layer){
+        PROFILER_FUNCTION();
         //加入时记得调用OnAttach初始化
         m_Layers.PushOverLayer(layer);
         layer->OnAttach();

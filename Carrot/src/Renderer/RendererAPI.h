@@ -1,7 +1,10 @@
 #pragma once
-#include <memory>
+
+#include "Core/Core.h"
+
 #include <glm/glm.hpp>
-#include "Core.h"
+
+#include <memory>
 
 namespace Carrot
 {
@@ -16,6 +19,7 @@ namespace Carrot
         virtual void SetClearColor(const glm::vec4& color) = 0;
         virtual void Clear() = 0;
         virtual void DrawIndexed(const Ref<VertexArray> vao) = 0;
+        virtual void DrawIndexed(const Ref<VertexArray> vao, uint32_t indexCount = 0) = 0;
         virtual void SetViewport(uint32_t width, uint32_t height) = 0;
         //返回实际使用的api
         inline static API GetAPI(){return api;}

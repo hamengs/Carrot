@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <cstdio>
 #include <cstdlib>
+#include <memory>
 
 #define CARROT_API
 
@@ -23,6 +23,8 @@
 #define CT_CORE_ASSERT(condition, message) ((void)0)
 #endif
 
+
+
 namespace Carrot
 {
     template<typename T>
@@ -30,5 +32,9 @@ namespace Carrot
     
     template<typename T>
     using Scope = std::unique_ptr<T>;
-
+    
+    template<typename T>
+    Ref<T> CreatRef(){
+        return std::make_shared<T>();
+    }
 }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core.h"
-#include "Layer.h"
+#include "Core/Core.h"
+#include "Core/Layer.h"
+
 #include <vector>
 
 namespace Carrot

@@ -22,6 +22,10 @@ namespace Carrot{
             s_RendererAPI->DrawIndexed(vao);
         }
 
+        inline static void DrawIndexed(const Ref<VertexArray>& vao, uint32_t indexCount = 0){
+            s_RendererAPI->DrawIndexed(vao,indexCount);
+        }
+
         inline static void SetViewport(uint32_t width, uint32_t height){
             s_RendererAPI->SetViewport(width,height);
         }

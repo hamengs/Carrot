@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Core.h"
-#include <memory>
-#include "Window.h"
-#include "Events/ApplicationEvent.h"
-#include "LayerStack.h"
-#include "Renderer/OrthographicCamera.h"
+#include "Core/Core.h"
+#include "Core/LayerStack.h"
 #include "Core/Time.h"
+#include "Core/Window.h"
+#include "Events/ApplicationEvent.h"
+#include "Renderer/OrthographicCamera.h"
 #include "Renderer/Renderer.h"
+
+#include <memory>
 
 namespace Carrot
 {
@@ -15,19 +16,7 @@ namespace Carrot
     class Shader;
     class VertexArray;
 
-    class CARROT_API Application
-    {
-    private:
-        /* data */
-        bool m_Running = true;
-        bool m_IsMinimize = false;
-        Scope<Window> m_Window;
-        ImGuiLayer* m_ImGuiLayer = nullptr;
-        LayerStack m_Layers;
-        bool OnWindowClose(WindowCloseEvent& e);
-
-
-
+    class CARROT_API Application{
     public:
         Application(/* args */);
         virtual ~Application();
@@ -37,6 +26,15 @@ namespace Carrot
         void PushOverLayer(Layer* layer);
         Window& GetWindow() { return *m_Window; }
         bool OnWindowResize(WindowResizeEvent& e);
+    private:
+        /* data */
+        bool m_Running = true;
+        bool m_IsMinimize = false;
+        Scope<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer = nullptr;
+        LayerStack m_Layers;
+        bool OnWindowClose(WindowCloseEvent& e);
+
     };
     
 

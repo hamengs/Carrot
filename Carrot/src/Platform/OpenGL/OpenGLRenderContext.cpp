@@ -1,4 +1,5 @@
-#include "OpenGLRenderContext.h"
+#include "Platform/OpenGL/OpenGLRenderContext.h"
+
 #include <GLFW/glfw3.h>
 
 namespace Carrot

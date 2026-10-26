@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Core.h"
+
 #include <cstdint>
-#include <string>
-#include <vector>
 #include <initializer_list>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 //把vsb和index抽象出来,作为纯虚函数
 namespace Carrot{
@@ -121,7 +122,8 @@ namespace Carrot{
         virtual void UnBind() = 0;
         virtual void SetLayout(const BufferLayout& layout) = 0;
         virtual const BufferLayout& GetLayout() const = 0;
-
+        virtual void SetData(const void* data,uint32_t size) = 0;
+        static VertexBuffer* Create(uint32_t size);
         static VertexBuffer* Create(float* vertices, uint32_t size);
     };
 

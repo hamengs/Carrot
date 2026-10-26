@@ -1,10 +1,13 @@
-#include "LayerStack.h"
+#include "Core/LayerStack.h"
+#include "Profiler/Profiler.h"
+
 #include <algorithm>
 
 namespace Carrot
 {
     LayerStack::LayerStack(){}
     LayerStack::~LayerStack(){
+        PROFILER_FUNCTION();
         for(auto layer : m_Layers){
             layer->OnDetach();
             delete layer;

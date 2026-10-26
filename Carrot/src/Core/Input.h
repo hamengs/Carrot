@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Core.h"
-#include "Window.h"
-#include <utility>
+#include "Core/Core.h"
+#include "Core/Window.h"
+
 #include <array>
+#include <utility>
 namespace Carrot
 {
     class CARROT_API Input{

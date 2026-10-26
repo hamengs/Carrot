@@ -1,11 +1,12 @@
 #pragma once
 
-#include "RendererAPI.h"
-#include <memory>
-#include "Renderer/OrthographicCamera.h"
-#include "Renderer/Shader.h"
+#include "Core/Core.h"
 #include "Renderer/Material.h"
-#include "Core.h"
+#include "Renderer/OrthographicCamera.h"
+#include "Renderer/RendererAPI.h"
+#include "Renderer/Shader.h"
+
+#include <memory>
 
 namespace Carrot
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Input.h"
-#include "Window.h"
+#include "Core/Input.h"
+#include "Core/Window.h"
 
 namespace Carrot{
     class WindowsInput : public Input{

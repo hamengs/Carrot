@@ -1,23 +1,30 @@
-#include "ImGuiLayer.h"
+#define GLFW_INCLUDE_NONE
+
+#include "ImGui/ImGuiLayer.h"
+#include "Profiler/Profiler.h"
+
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
-#include <imgui.h>
+
+#include <GLFW/glfw3.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <imgui.h>
+
 #include <stdexcept>
 
 namespace Carrot
 {
     void ImGuiLayer::Begin(){
+        PROFILER_FUNCTION();
         ImGui_ImplOpenGL3_NewFrame(); // 准备渲染后端 OpenGL 后端准备
         ImGui_ImplGlfw_NewFrame(); // 更新窗口和输入相关信息
         ImGui::NewFrame();  // 正式开始构建这一帧的 UI
     }
 
     void ImGuiLayer::OnImGuiRender(){
+        PROFILER_FUNCTION();
         //这一层自己的界面内容
         if (m_ShowDemo)
         ImGui::ShowDemoWindow(&m_ShowDemo);
@@ -28,6 +35,7 @@ namespace Carrot
     //指定了主窗口. 所以gui面板都被主窗口所承载然后才能绘制. 如果拖出去的话imgui会自动创建一个glfw窗口来承载拖出去的gui,
     //这就导致了会改变opengl上下文. imgui需要一个glfw窗口来承载才能绘制
     void ImGuiLayer::End(){
+        PROFILER_FUNCTION();
         ImGui::Render();//整理所有窗口绘制数据
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//把整理的数据发送给opengl执行绘制(主窗口)
 
@@ -47,6 +55,7 @@ namespace Carrot
     }
 
     void ImGuiLayer::OnAttach(){
+        PROFILER_FUNCTION();
         IMGUI_CHECKVERSION(); // 版本检查
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
@@ -81,12 +90,14 @@ namespace Carrot
 
     //依次关闭opengl glfw和imgui 不会关闭 GLFW 窗口
     void ImGuiLayer::OnDetach(){
+        PROFILER_FUNCTION();
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
     void ImGuiLayer::OnEvent(Event& e){
+        PROFILER_FUNCTION();
         auto* window = static_cast<GLFWwindow*>(m_Window->GetNativeWindow());
         EventDispatcher dispatcher(e);
 

@@ -1,18 +1,18 @@
-#include "WindowsWindow.h"
-#include "Platform/OpenGL/OpenGLRenderContext.h"
-#include "Log.h"
+#define GLFW_INCLUDE_NONE
 
+#include "Platform/Windows/WindowsWindow.h"
+
+#include "Core/Log.h"
+#include "Profiler/Profiler.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
+#include "Platform/OpenGL/OpenGLRenderContext.h"
 
 #include <glad/glad.h>
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <stdexcept>
-#include "Events/KeyEvent.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/MouseEvent.h"
-
-
 #include <string>
 
 
@@ -30,6 +30,7 @@ namespace Carrot
 
 
     void WindowsWindow::Init(const WindowProps& props){
+        PROFILER_FUNCTION();
         if(!glfwInit()){
             throw std::runtime_error("Failed to initialize GLFW");
         }
@@ -222,6 +223,7 @@ namespace Carrot
     }
 
     void WindowsWindow::ShutDown(){
+        PROFILER_FUNCTION();
         glfwDestroyWindow(m_Window);
         m_Window = nullptr;
         //当前实现只管理一个窗口；多窗口时需统一管理 GLFW 的终止时机。
@@ -229,11 +231,13 @@ namespace Carrot
     }
 
     void WindowsWindow::PollEvents(){
+        PROFILER_FUNCTION();
         //处理已到达的窗口消息，更新状态并调用已注册的回调。
         glfwPollEvents();
     }
 
     void WindowsWindow::SwapBuffers(){
+        PROFILER_FUNCTION();
         //交换这个窗口的显示缓冲，呈现绘制结果；不会自动绘制或清屏。
         m_Context->SwapBuffer();
         

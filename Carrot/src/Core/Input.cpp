@@ -1,7 +1,9 @@
-#include "Input.h"
-#include "Events/KeyEvent.h"
+#include "Core/Input.h"
+
 #include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
+
 #include <stdexcept>
 
 namespace Carrot

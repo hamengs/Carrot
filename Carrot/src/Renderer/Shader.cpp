@@ -1,10 +1,11 @@
-#include "Shader.h"
-#include "RendererAPI.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer/Shader.h"
 
-#include <stdexcept>
+#include "Core/File.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer/RendererAPI.h"
+
 #include <filesystem>
-#include "File.h"
+#include <stdexcept>
 
 namespace Carrot
 {

@@ -1,5 +1,7 @@
 #include "Renderer/RendererAPI.h"
+
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
+
 #include <stdexcept>
 
 namespace Carrot{

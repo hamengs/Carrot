@@ -1,13 +1,30 @@
 #include "Platform/OpenGL/OpenGLTexture2D.h"
-#include <glad/glad.h>
+
+#include "Core/Log.h"
+#include "Profiler/Profiler.h"
+
+
 #include <stb_image.h>
-#include "Log.h"
 
 namespace Carrot
 {
-
+    OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height){
+        PROFILER_FUNCTION();
+        glCreateTextures(GL_TEXTURE_2D,1,&m_Texture2D_ID);
+        glBindTexture(GL_TEXTURE_2D, m_Texture2D_ID);
+        m_Width = width;
+        m_Height = height;
+        m_InternalFormat = GL_RGBA8;
+        m_DataFormat = GL_RGBA;
+        m_Channel = 4;
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
   
     OpenGLTexture2D::OpenGLTexture2D(const std::string& path):m_Path(path){
+        PROFILER_SCOPE(path);
         int width,height,channels;
         stbi_set_flip_vertically_on_load(1);
         unsigned char* data = stbi_load(path.c_str(),&width,&height,&channels,0);
@@ -42,11 +59,19 @@ namespace Carrot
     }
 
     OpenGLTexture2D::~OpenGLTexture2D(){
+        PROFILER_FUNCTION();
         glDeleteTextures(1,&m_Texture2D_ID);
     }
 
     void OpenGLTexture2D::Bind(uint32_t slot) const {
         glBindTextureUnit(slot,m_Texture2D_ID);
+    }
+
+    void OpenGLTexture2D::SetData(const void* data, uint32_t size) const {
+        PROFILER_FUNCTION();
+        CT_CORE_ASSERT(size==m_Width*m_Height*4,"Texture data size mismatch");
+        glBindTexture(GL_TEXTURE_2D,m_Texture2D_ID);
+        glTexImage2D(GL_TEXTURE_2D,0,m_InternalFormat,m_Width,m_Height,0,m_DataFormat,GL_UNSIGNED_BYTE,data);
     }
 
 }

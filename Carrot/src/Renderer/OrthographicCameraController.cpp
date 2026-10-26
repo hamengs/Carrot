@@ -1,6 +1,8 @@
-#include "OrthographicCameraController.h"
+#include "Renderer/OrthographicCameraController.h"
+
+#include "Core/KeyCode.h"
 #include "Core/Time.h"
-#include "src/KeyCode.h"
+#include "Profiler/Profiler.h"
 
 namespace Carrot{
 
@@ -19,6 +21,7 @@ namespace Carrot{
     }
 
     void OrthographicCameraController::OnUpdate(){
+        PROFILER_FUNCTION();
         //线性缩放移动速度,根据窗口大小来判断
         m_CameraMoveSpeed = 5.0f*m_ZoomLevel;
 
@@ -45,6 +48,7 @@ namespace Carrot{
     }
 
     void OrthographicCameraController::OnEvent(Event& e){
+        PROFILER_FUNCTION();
         EventDispatcher dispatcher(e);
 
         dispatcher.Dispatch<MouseScrolledEvent>(std::bind(&OrthographicCameraController::OnMouseScrolled,this,std::placeholders::_1));
@@ -52,6 +56,7 @@ namespace Carrot{
     }
 
     bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e){
+        PROFILER_FUNCTION();
         m_ZoomLevel -= e.GetY()*0.25f;
         m_ZoomLevel = std::max(m_ZoomLevel,0.25f);
          m_Camera->SetProjection(
@@ -64,6 +69,7 @@ namespace Carrot{
     }
 
     bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e){
+        PROFILER_FUNCTION();
         if (e.GetWidth() == 0 || e.GetHeight() == 0){
             return false;
         }

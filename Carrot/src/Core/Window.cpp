@@ -1,4 +1,5 @@
-#include "Window.h"
+#include "Core/Window.h"
+
 #include "Platform/Windows/WindowsWindow.h"
 
 namespace Carrot

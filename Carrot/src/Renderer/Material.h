@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Shader.h"
-#include <utility>
-#include "Core.h"
+#include "Core/Core.h"
+#include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
+
+#include <utility>
 
 namespace Carrot
 {

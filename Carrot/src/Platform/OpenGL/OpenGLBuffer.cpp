@@ -1,4 +1,5 @@
-#include "OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
+
 #include <glad/glad.h>
 
 //这里就是真正调用底层api的地方
@@ -6,10 +7,21 @@ namespace Carrot
 {   
 
     //----------------------VBO----------------------------
+    OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size): m_Size(size){
+        glCreateBuffers(1,&m_VertexID);
+        glBindBuffer(GL_ARRAY_BUFFER,m_VertexID);
+        glBufferData(GL_ARRAY_BUFFER,m_Size,nullptr,GL_DYNAMIC_DRAW); 
+    }
+
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size): m_Size(size){
         glCreateBuffers(1,&m_VertexID);
         glBindBuffer(GL_ARRAY_BUFFER,m_VertexID);
         glBufferData(GL_ARRAY_BUFFER,m_Size,vertices,GL_STATIC_DRAW); 
+    }
+
+    void OpenGLVertexBuffer::SetData(const void* data, uint32_t size){
+        glBindBuffer(GL_ARRAY_BUFFER,m_VertexID);
+        glBufferSubData(GL_ARRAY_BUFFER,0,size,data); 
     }
 
     OpenGLVertexBuffer::~OpenGLVertexBuffer(){

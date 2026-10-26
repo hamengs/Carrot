@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Events/Event.h"
+#include "Core/Input.h"
 #include "Events/ApplicationEvent.h"
+#include "Events/Event.h"
 #include "Events/MouseEvent.h"
 #include "Renderer/OrthographicCamera.h"
-#include "Input.h"
 
 namespace Carrot
 {
